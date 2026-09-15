@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Geist } from "next/font/google";
-import "./globals.css";
-import { cn } from "@/lib/utils";
-import Navbar from "@/components/Navbar";
+import { Bricolage_Grotesque } from "next/font/google";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -22,11 +20,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
-
+    <html lang="en">
       <body className={`${bricolage.variable} antialiased`}>
-        <Navbar/>
-        {children}</body>
+       
+          <Navbar />
+          {children}
+        
+      </body>
     </html>
   );
 }
