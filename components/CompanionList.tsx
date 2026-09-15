@@ -15,12 +15,12 @@ import Image from "next/image";
 interface CompanionsListProps {
     title: string;
     companions?: Companion[];
-    classNames?: string;
+    className?: string;
 }
 
-const CompanionsList = ({ title, companions, classNames }: CompanionsListProps) => {
+const CompanionsList = ({ title, companions, className }: CompanionsListProps) => {
     return (
-        <article className={cn('companion-list', classNames)}>
+        <article className={cn('companion-list', className)}>
             <h2 className="font-bold text-3xl">{title}</h2>
 
             <Table>
@@ -37,7 +37,7 @@ const CompanionsList = ({ title, companions, classNames }: CompanionsListProps) 
                             <TableCell>
                                 <Link href={`/companions/${id}`}>
                                     <div className="flex items-center gap-2">
-                                        <div className="size-[72px] flex items-center justify-center rounded-lg max-md:hidden" style={{ backgroundColor: getSubjectColor(subject) }}>
+                                        <div className="size-18 flex items-center justify-center rounded-lg max-md:hidden" style={{ backgroundColor: getSubjectColor(subject) }}>
                                             <Image
                                                 src={`/icons/${subject}.svg`}
                                                 alt={subject}
