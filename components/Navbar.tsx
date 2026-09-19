@@ -19,9 +19,9 @@ const Navbar = () => {
           <SignInButton>
             <button className=" btn-signin">Sign In</button>
           </SignInButton>
-          <SignUpButton>
+          {/* <SignUpButton>
             <button className=" btn-signup">Sign Up</button>
-          </SignUpButton>
+          </SignUpButton> */}
         </Show>
 
         <Show when="signed-in">
