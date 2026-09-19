@@ -20,6 +20,7 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [messages, setMessages] = useState<SavedMessage[]>([]);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const lottieRef = useRef<any>(null);
 
@@ -51,7 +52,11 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
         const onSpeechStart = () => setIsSpeaking(true);
         const onSpeechEnd = () => setIsSpeaking(false);
 
-        const onError = (error: Error) => console.log('Error', error);
+        const onError = (error: Error) => {
+            console.error('Vapi error', error);
+            setErrorMessage('Unable to connect to the voice session. Please try again.');
+            setCallStatus(CallStatus.INACTIVE);
+        };
 
         vapi.on('call-start', onCallStart);
         vapi.on('call-end', onCallEnd);
@@ -78,15 +83,21 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
 
     const handleCall = async () => {
         setCallStatus(CallStatus.CONNECTING)
+        setErrorMessage(null)
 
         const assistantOverrides = {
             variableValues: { subject, topic, style },
-            clientMessages: ["transcript"],
-            serverMessages: [],
+            clientMessages: ["transcript"] as unknown as "transcript",
+            serverMessages: ["status-update"] as unknown as "status-update",
         }
 
-        // @ts-expect-error
-        vapi.start(configureAssistant(voice, style), assistantOverrides)
+        try {
+            await vapi.start(configureAssistant(voice, style), assistantOverrides)
+        } catch (error) {
+            console.error('Unable to start Vapi call', error)
+            setErrorMessage('Unable to connect to the voice session. Please try again.')
+            setCallStatus(CallStatus.INACTIVE)
+        }
     }
 
     const handleDisconnect = () => {
@@ -111,7 +122,7 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
                         <div className={cn('absolute transition-opacity duration-1000', callStatus === CallStatus.ACTIVE ? 'opacity-100': 'opacity-0')}>
                             <Lottie
                                 lottieRef={lottieRef}
-                                // animationData={soundwaves}
+                                src={soundwaves}
                                 autoplay={false}
                                 className="companion-lottie"
                             />
@@ -141,6 +152,7 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
                         : 'Start Session'
                         }
                     </button>
+                    {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
                 </div>
             </section>
 

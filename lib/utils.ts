@@ -54,8 +54,8 @@ export const configureAssistant = (voice: string, style: string) => {
         },
       ],
     },
-    clientMessages: "transcript",
-    serverMessages: "status-update",
+    clientMessages: ["transcript"] as unknown as "transcript",
+    serverMessages: ["status-update"] as unknown as "status-update",
   };
   return vapiAssistant;
 };
